@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	aercmd "github.com/octoberswimmer/aer/cmd"
 	"github.com/octoberswimmer/aer/depcheck"
 	"github.com/spf13/cobra"
 )
@@ -19,6 +20,8 @@ var (
 	recursive      bool
 	namespace      string
 	features       []string
+	packageFiles   []string
+	packageDirs    []string
 	apiVersion     string
 	verbose        bool
 )
@@ -40,8 +43,13 @@ self-contained.`,
 	RunE:          run,
 }
 
-// Execute runs the aer-check command.
+// Execute runs the aer-check command. Default flags from the shared .aerrc
+// configuration files are applied before the user's own arguments, so anything
+// passed on the command line overrides them.
 func Execute() {
+	if defaults := aercmd.ConfigDefaultArgs(rootCmd); len(defaults) > 0 {
+		rootCmd.SetArgs(append(defaults, os.Args[1:]...))
+	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "aer-check: %v\n", err)
 		os.Exit(1)
@@ -56,6 +64,8 @@ func init() {
 	flags.BoolVar(&recursive, "recursive", false, "after fetching, re-analyze to resolve dependencies of fetched components")
 	flags.StringVarP(&namespace, "namespace", "d", "", "default namespace for the source (like aer --default-namespace)")
 	flags.StringArrayVar(&features, "feature", nil, "enable an optional schema feature (repeatable)")
+	flags.StringArrayVar(&packageFiles, "package", nil, "managed-package .pkg file to load so its types are not reported missing (repeatable)")
+	flags.StringArrayVar(&packageDirs, "package-dir", nil, "directory containing .pkg files to load (repeatable)")
 	flags.StringVar(&apiVersion, "api-version", "", "Metadata API version for package.xml and fetch (default: client default)")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "print parse and type-check errors encountered during analysis")
 }
@@ -79,9 +89,11 @@ func run(cmd *cobra.Command, args []string) error {
 
 	for iteration := 1; ; iteration++ {
 		report, errs, err := depcheck.Analyze(depcheck.Options{
-			Dirs:      allDirs,
-			Namespace: namespace,
-			Features:  features,
+			Dirs:         allDirs,
+			Namespace:    namespace,
+			Features:     features,
+			PackageFiles: packageFiles,
+			PackageDirs:  packageDirs,
 		})
 		if err != nil {
 			return err

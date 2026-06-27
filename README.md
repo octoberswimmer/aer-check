@@ -45,12 +45,38 @@ With no directory, the current directory is analyzed.
 | `--recursive` | After fetching, re-analyze to resolve dependencies of the fetched components. Requires `--fetch-missing`. |
 | `--namespace, -d <ns>` | Default namespace for the source (like `aer --default-namespace`). |
 | `--feature <name>` | Enable an optional schema feature (repeatable; like `aer --feature`). |
+| `--package <file>` | Load a managed-package `.pkg` file so the types it provides are not reported as missing (repeatable; like `aer --package`). |
+| `--package-dir <dir>` | Load every `.pkg` file in a directory (repeatable; like `aer --package-dir`). |
 | `--api-version <v>` | Metadata API version for `package.xml` and fetch (default: the client default). |
 | `--verbose, -v` | Print the parse/type-check errors encountered during analysis. |
 
 `aer-check` exits with status `2` when unresolved dependencies remain after
 processing, so it can be used as a CI gate. It exits `0` when nothing is
 missing and `1` on error.
+
+### Configuration (.aerrc)
+
+`aer-check` reads the same `.aerrc` configuration files as `aer`, so default
+flags can be set per project or per user instead of repeating them on every
+invocation. Files are read in increasing order of precedence:
+
+1. `$XDG_CONFIG_HOME/aer/aerrc` (or `~/.config/aer/aerrc`)
+2. `~/.aerrc`
+3. `./.aerrc` (the current directory)
+
+Each line holds one flag, optionally followed by its value; blank lines,
+`#` comments, and lines not starting with `-` are ignored. Flags that
+`aer-check` does not define (for example `aer`'s `--certificate-dir`) are
+ignored, so a project's existing `.aerrc` can be shared between `aer` and
+`aer-check`. Flags from `.aerrc` are applied before the command line, so
+explicit arguments override them. Set `AER_NO_RC` to ignore all `.aerrc`
+files for a run.
+
+```
+# .aerrc — defaults for this project
+--package-dir packages
+--namespace acme
+```
 
 ### Examples
 
@@ -92,6 +118,15 @@ Fetch from a specific org:
 
 ```sh
 aer-check force-app/main/default --fetch-missing dependencies --account my-prod-org
+```
+
+Ignore dependencies that a managed package already provides by loading its
+`.pkg` files, so only the truly missing components are reported:
+
+```sh
+aer-check force-app/main/default \
+  --package dlrs.pkg \
+  --package-dir ./packages
 ```
 
 ## What it detects
