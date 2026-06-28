@@ -19,7 +19,6 @@ var (
 	account        string
 	recursive      bool
 	namespace      string
-	features       []string
 	packageFiles   []string
 	packageDirs    []string
 	apiVersion     string
@@ -63,7 +62,6 @@ func init() {
 	flags.StringVarP(&account, "account", "a", "", "Salesforce account/org to fetch from (default: active org)")
 	flags.BoolVar(&recursive, "recursive", false, "after fetching, re-analyze to resolve dependencies of fetched components")
 	flags.StringVarP(&namespace, "namespace", "d", "", "default namespace for the source (like aer --default-namespace)")
-	flags.StringArrayVar(&features, "feature", nil, "enable an optional schema feature (repeatable)")
 	flags.StringArrayVar(&packageFiles, "package", nil, "managed-package .pkg file to load so its types are not reported missing (repeatable)")
 	flags.StringArrayVar(&packageDirs, "package-dir", nil, "directory containing .pkg files to load (repeatable)")
 	flags.StringVar(&apiVersion, "api-version", "", "Metadata API version for package.xml and fetch (default: client default)")
@@ -91,7 +89,6 @@ func run(cmd *cobra.Command, args []string) error {
 		report, errs, err := depcheck.Analyze(depcheck.Options{
 			Dirs:         allDirs,
 			Namespace:    namespace,
-			Features:     features,
 			PackageFiles: packageFiles,
 			PackageDirs:  packageDirs,
 		})

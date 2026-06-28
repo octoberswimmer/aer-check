@@ -44,7 +44,6 @@ With no directory, the current directory is analyzed.
 | `--account, -a <name>` | Salesforce account/org to fetch from (default: the active org). |
 | `--recursive` | After fetching, re-analyze to resolve dependencies of the fetched components. Requires `--fetch-missing`. |
 | `--namespace, -d <ns>` | Default namespace for the source (like `aer --default-namespace`). |
-| `--feature <name>` | Enable an optional schema feature (repeatable; like `aer --feature`). |
 | `--package <file>` | Load a managed-package `.pkg` file so the types it provides are not reported as missing (repeatable; like `aer --package`). |
 | `--package-dir <dir>` | Load every `.pkg` file in a directory (repeatable; like `aer --package-dir`). |
 | `--api-version <v>` | Metadata API version for `package.xml` and fetch (default: the client default). |
@@ -146,11 +145,13 @@ aer-check force-app/main/default \
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
 
 A field whose parent **object** is also missing is omitted from the report —
-retrieving the object brings its fields along. Only **custom** referents are
-reported as missing fields: standard fields and relationships (e.g. `RecordType`,
-`Owner`) are always present in the target org and are never fetchable
-dependencies. Record-type availability follows the record types defined in the
-source metadata.
+retrieving the object brings its fields along. Only **custom** objects and
+fields are reported as missing: standard objects, fields, and relationships
+(e.g. `RecordType`, `Owner`) and feature- or license-gated standard objects are
+always present in the target org and are never fetchable dependencies.
+Record-type availability follows the record types defined in the source
+metadata. Because only custom metadata is reported, optional schema features do
+not need to be enabled for the analysis.
 
 ### Known limitations
 
