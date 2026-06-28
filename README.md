@@ -134,13 +134,20 @@ aer-check force-app/main/default \
 | Kind | How it is referenced | `package.xml` type |
 |------|----------------------|--------------------|
 | Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`, etc. | `CustomObject` |
-| Fields | in SOQL `SELECT`/`WHERE`, and `Object.Field` access on a known object | `CustomField` |
+| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, **formula fields and validation rules** | `CustomField` |
 | Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`) | `ApexClass` |
 | Custom labels | `Label.My_Label` | `CustomLabel` |
 | Flows | `Flow.Interview.My_Flow` | `Flow` |
+| Visualforce pages | `Page.My_Page`, `System.Page.My_Page` | `ApexPage` |
+| FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
+| Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
 
 A field whose parent **object** is also missing is omitted from the report —
-retrieving the object brings its fields along.
+retrieving the object brings its fields along. Only **custom** referents are
+reported as missing fields: standard fields and relationships (e.g. `RecordType`,
+`Owner`) are always present in the target org and are never fetchable
+dependencies. Record-type availability follows the record types defined in the
+source metadata.
 
 ### Known limitations
 
