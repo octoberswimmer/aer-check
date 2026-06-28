@@ -135,10 +135,13 @@ aer-check force-app/main/default \
 |------|----------------------|--------------------|
 | Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`, etc. | `CustomObject` |
 | Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, **formula fields and validation rules** | `CustomField` |
-| Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`) | `ApexClass` |
+| Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses` | `ApexClass` |
+| Custom permissions | Profile/PermissionSet `customPermissions` | `CustomPermission` |
 | Custom labels | `Label.My_Label` | `CustomLabel` |
-| Flows | `Flow.Interview.My_Flow` | `Flow` |
-| Visualforce pages | `Page.My_Page`, `System.Page.My_Page` | `ApexPage` |
+| Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
+| Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses` | `ApexPage` |
+| Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp` | `ApexComponent` |
+| Custom tabs | CustomApplication `<tabs>` | `CustomTab` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
 
@@ -160,4 +163,10 @@ source metadata.
   `System.Label.X` form is not yet detected.
 - Managed-package components are not retrievable through the Metadata API; for a
   managed dependency the fetch step reports a warning and continues.
+- Profile/PermissionSet detection covers Apex classes, Visualforce pages, flows,
+  and custom permissions; object, field, record-type, and layout references are
+  not yet checked.
+- Custom permissions are detected through Profile/PermissionSet
+  `customPermissions`; the Apex form (`FeatureManagement.checkPermission('X')`)
+  is not yet detected.
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	aercmd "github.com/octoberswimmer/aer/cmd"
@@ -52,6 +53,17 @@ func TestAerrcDefaultsFilterToAerCheckFlags(t *testing.T) {
 		if got[i] != want[i] {
 			t.Fatalf("ConfigDefaultArgs() = %#v, want %#v", got, want)
 		}
+	}
+}
+
+func TestRunRecursiveRequiresFetch(t *testing.T) {
+	prevRecursive, prevFetch := recursive, fetchDir
+	defer func() { recursive, fetchDir = prevRecursive, prevFetch }()
+	recursive = true
+	fetchDir = ""
+	err := run(rootCmd, []string{"."})
+	if err == nil || !strings.Contains(err.Error(), "--recursive requires --fetch-missing") {
+		t.Fatalf("expected recursive-without-fetch error, got %v", err)
 	}
 }
 
