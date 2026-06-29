@@ -143,6 +143,7 @@ aer-check force-app/main/default \
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
 | Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
 | Layouts | Profile `layoutAssignments` | `Layout` |
+| Record types | Profile/PermissionSet `recordTypeVisibilities` | `RecordType` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
 
