@@ -140,7 +140,9 @@ aer-check force-app/main/default \
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
 | Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses` | `ApexPage` |
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp` | `ApexComponent` |
-| Custom tabs | CustomApplication `<tabs>` | `CustomTab` |
+| Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
+| Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
+| Layouts | Profile `layoutAssignments` | `Layout` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
 
