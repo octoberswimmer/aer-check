@@ -141,6 +141,7 @@ aer-check force-app/main/default \
 | Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses` | `ApexPage` |
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
 | Static resources | Visualforce page/component markup `$Resource.X` | `StaticResource` |
+| Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
 | Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
 | Layouts | Profile `layoutAssignments` | `Layout` |
