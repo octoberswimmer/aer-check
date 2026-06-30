@@ -150,6 +150,7 @@ aer-check force-app/main/default \
 | Global value sets | custom picklist field `valueSetName` | `GlobalValueSet` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
+| Aura components | Aura markup `<c:cmp>`, `extends`, `implements`, and controllers | `AuraDefinitionBundle` |
 
 A field whose parent **object** is also missing is omitted from the report —
 retrieving the object brings its fields along. Only **custom** objects and
