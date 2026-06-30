@@ -144,6 +144,7 @@ aer-check force-app/main/default \
 | Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
 | Layouts | Profile `layoutAssignments` | `Layout` |
 | Record types | Profile/PermissionSet `recordTypeVisibilities` | `RecordType` |
+| Global value sets | custom picklist field `valueSetName` | `GlobalValueSet` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
 
