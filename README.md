@@ -132,7 +132,7 @@ aer-check force-app/main/default \
 
 | Kind | How it is referenced | `package.xml` type |
 |------|----------------------|--------------------|
-| Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions` | `CustomObject` |
+| Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions`; custom object tabs | `CustomObject` |
 | Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items; FlexiPage field instances | `CustomField` |
 | Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions` | `ApexClass` |
 | Field sets | Apex `SObjectType.X.FieldSets.Y`, VF `$ObjectType.X.FieldSets.Y` | `FieldSet` |
@@ -140,7 +140,7 @@ aer-check force-app/main/default \
 | Custom permissions | Profile/PermissionSet `customPermissions`, Apex `FeatureManagement.checkPermission('X')` | `CustomPermission` |
 | Custom labels | `Label.My_Label` | `CustomLabel` |
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
-| Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses` | `ApexPage` |
+| Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses`; Visualforce tab `page` | `ApexPage` |
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
 | Static resources | Visualforce page/component markup `$Resource.X` | `StaticResource` |
 | Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
@@ -151,7 +151,7 @@ aer-check force-app/main/default \
 | Record types | Profile/PermissionSet `recordTypeVisibilities` | `RecordType` |
 | Global value sets | custom picklist field `valueSetName` | `GlobalValueSet` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
-| Lightning components | FlexiPage `<componentName>c:myCmp</componentName>` | `LightningComponentBundle` |
+| Lightning components | FlexiPage `<componentName>c:myCmp</componentName>`; Lightning component tab `lwcComponent` | `LightningComponentBundle` |
 | Aura components | Aura markup `<c:cmp>`, `extends`, `implements`, and controllers | `AuraDefinitionBundle` |
 
 A field whose parent **object** is also missing is omitted from the report —
