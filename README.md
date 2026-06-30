@@ -142,6 +142,7 @@ aer-check force-app/main/default \
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
 | Static resources | Visualforce page/component markup `$Resource.X` | `StaticResource` |
 | Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
+| Lightning message channels | LWC `@salesforce/messageChannel/X` import | `LightningMessageChannel` |
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
 | Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
 | Layouts | Profile `layoutAssignments` | `Layout` |
@@ -158,6 +159,11 @@ always present in the target org and are never fetchable dependencies.
 Record-type availability follows the record types defined in the source
 metadata. Because only custom metadata is reported, optional schema features do
 not need to be enabled for the analysis.
+
+Lightning web component JavaScript is parsed (via the LWC discovery), and its
+`@salesforce/...` imports also contribute references: `apex` → Apex classes,
+`resourceUrl` → static resources, `messageChannel` → Lightning message channels,
+and `schema/Object[.Field]` → custom objects and fields.
 
 ### Known limitations
 
