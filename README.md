@@ -135,6 +135,7 @@ aer-check force-app/main/default \
 | Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions` | `CustomObject` |
 | Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions` | `CustomField` |
 | Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions` | `ApexClass` |
+| Field sets | Apex `SObjectType.X.FieldSets.Y` | `FieldSet` |
 | Custom permissions | Profile/PermissionSet `customPermissions`, Apex `FeatureManagement.checkPermission('X')` | `CustomPermission` |
 | Custom labels | `Label.My_Label` | `CustomLabel` |
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
