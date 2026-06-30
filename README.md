@@ -134,12 +134,13 @@ aer-check force-app/main/default \
 |------|----------------------|--------------------|
 | Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions` | `CustomObject` |
 | Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions` | `CustomField` |
-| Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses` | `ApexClass` |
+| Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions` | `ApexClass` |
 | Custom permissions | Profile/PermissionSet `customPermissions`, Apex `FeatureManagement.checkPermission('X')` | `CustomPermission` |
 | Custom labels | `Label.My_Label` | `CustomLabel` |
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
 | Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses` | `ApexPage` |
-| Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp` | `ApexComponent` |
+| Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
+| Static resources | Visualforce page/component markup `$Resource.X` | `StaticResource` |
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
 | Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
 | Layouts | Profile `layoutAssignments` | `Layout` |
