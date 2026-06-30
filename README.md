@@ -133,7 +133,7 @@ aer-check force-app/main/default \
 | Kind | How it is referenced | `package.xml` type |
 |------|----------------------|--------------------|
 | Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions` | `CustomObject` |
-| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions` | `CustomField` |
+| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items | `CustomField` |
 | Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions` | `ApexClass` |
 | Field sets | Apex `SObjectType.X.FieldSets.Y`, VF `$ObjectType.X.FieldSets.Y` | `FieldSet` |
 | Custom metadata records | Apex `Type__mdt.getInstance('X')` | `CustomMetadata` |
