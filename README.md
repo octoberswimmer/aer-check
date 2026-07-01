@@ -150,6 +150,7 @@ aer-check force-app/main/default \
 | Layouts | Profile `layoutAssignments` | `Layout` |
 | Record types | Profile/PermissionSet `recordTypeVisibilities` | `RecordType` |
 | Report types | Report `reportType` (custom `__c` types) | `ReportType` |
+| Reports | Dashboard components (`<report>Folder/Report</report>`) | `Report` |
 | Global value sets | custom picklist field `valueSetName` | `GlobalValueSet` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>`; Lightning component tab `lwcComponent` | `LightningComponentBundle` |
