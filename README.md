@@ -132,8 +132,8 @@ aer-check force-app/main/default \
 
 | Kind | How it is referenced | `package.xml` type |
 |------|----------------------|--------------------|
-| Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions`; custom object tabs; queue `queueSobject`; field `referenceTo`; report type `baseObject`; layout related lists; flow record elements | `CustomObject` |
-| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items; FlexiPage field instances; list view columns/filters; compact layout fields; related list lookups; flow record fields | `CustomField` |
+| Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions`; custom object tabs; queue `queueSobject`; field `referenceTo`; report type `baseObject`; layout related lists; flow record elements; quick action / path assistant target objects | `CustomObject` |
+| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items; FlexiPage field instances; list view columns/filters; compact layout fields; related list lookups; flow record fields; field sets; record type picklists; workflow field updates; quick action layouts; path assistants; lookup filters; matching / duplicate / approval / sharing / assignment / escalation / auto-response rules | `CustomField` |
 | Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions`; flow apex actions | `ApexClass` |
 | Field sets | Apex `SObjectType.X.FieldSets.Y`, VF `$ObjectType.X.FieldSets.Y` | `FieldSet` |
 | Custom metadata records | Apex `Type__mdt.getInstance('X')` | `CustomMetadata` |
