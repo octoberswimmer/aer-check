@@ -132,15 +132,15 @@ aer-check force-app/main/default \
 
 | Kind | How it is referenced | `package.xml` type |
 |------|----------------------|--------------------|
-| Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions`; custom object tabs; queue `queueSobject` | `CustomObject` |
-| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items; FlexiPage field instances | `CustomField` |
-| Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions` | `ApexClass` |
+| Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions`; custom object tabs; queue `queueSobject`; field `referenceTo`; report type `baseObject`; layout related lists; flow record elements | `CustomObject` |
+| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items; FlexiPage field instances; list view columns/filters; compact layout fields; related list lookups | `CustomField` |
+| Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions`; flow apex actions | `ApexClass` |
 | Field sets | Apex `SObjectType.X.FieldSets.Y`, VF `$ObjectType.X.FieldSets.Y` | `FieldSet` |
 | Custom metadata records | Apex `Type__mdt.getInstance('X')` | `CustomMetadata` |
 | Custom permissions | Profile/PermissionSet `customPermissions`, Apex `FeatureManagement.checkPermission('X')` | `CustomPermission` |
 | Custom labels | `Label.My_Label` | `CustomLabel` |
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
-| Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses`; Visualforce tab `page` | `ApexPage` |
+| Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses`; Visualforce tab `page`; web link / custom button `page` | `ApexPage` |
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
 | Static resources | Visualforce page/component markup `$Resource.X` | `StaticResource` |
 | Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
