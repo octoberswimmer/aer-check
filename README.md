@@ -133,7 +133,7 @@ aer-check force-app/main/default \
 | Kind | How it is referenced | `package.xml` type |
 |------|----------------------|--------------------|
 | Custom objects | as a type (`Widget__c w`, `new Widget__c()`), in SOQL `FROM`; Profile/PermissionSet `objectPermissions`; custom object tabs; queue `queueSobject`; field `referenceTo`; report type `baseObject`; layout related lists; flow record elements; quick action / path assistant target objects; custom metadata record types; roll-up child objects; flow variable objects; navigation menu items; LWC targets; permission set custom metadata / setting accesses | `CustomObject` |
-| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items; FlexiPage field instances; list view columns/filters; compact layout fields; related list lookups; flow record fields; field sets; record type picklists; workflow field updates; quick action layouts; path assistants; lookup filters; matching / duplicate / approval / sharing / assignment / escalation / auto-response rules; report columns; email template merge fields; custom metadata record values; custom indexes; dependent-picklist controlling fields; roll-up summaries | `CustomField` |
+| Fields | in SOQL `SELECT`/`WHERE`, `Object.Field` access, formula fields, validation rules; Profile/PermissionSet `fieldPermissions`; layout items; FlexiPage field instances; list view columns/filters; compact layout fields; related list lookups; flow record fields; field sets; record type picklists; workflow field updates; quick action layouts; path assistants; lookup filters; matching / duplicate / approval / sharing / assignment / escalation / auto-response rules; report columns; email template merge fields; custom metadata record values; custom indexes; dependent-picklist controlling fields; roll-up summaries; object translations | `CustomField` |
 | Apex classes / interfaces | as a type (`new`, variable/parameter/return/cast/`instanceof`); Profile/PermissionSet `classAccesses`; VF page `controller`/`extensions`; flow apex actions | `ApexClass` |
 | Field sets | Apex `SObjectType.X.FieldSets.Y`, VF `$ObjectType.X.FieldSets.Y` | `FieldSet` |
 | Custom metadata records | Apex `Type__mdt.getInstance('X')` | `CustomMetadata` |
@@ -142,7 +142,8 @@ aer-check force-app/main/default \
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
 | Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses`; Visualforce tab `page`; web link / custom button `page` | `ApexPage` |
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
-| Static resources | Visualforce page/component markup `$Resource.X` | `StaticResource` |
+| Static resources | Visualforce page/component markup `$Resource.X`; LWC `@salesforce/resourceUrl/X`; Apex `Test.loadData(..., 'X')` | `StaticResource` |
+| Email templates | Workflow email alert `template` | `EmailTemplate` |
 | Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
 | Lightning message channels | LWC `@salesforce/messageChannel/X` import | `LightningMessageChannel` |
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
