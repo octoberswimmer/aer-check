@@ -12,23 +12,6 @@ references it cannot resolve. It can then write a Metadata API `package.xml` for
 those components and, given a Salesforce org, fetch them so the package becomes
 self-contained.
 
-## Install / build
-
-`aer-check` lives in its own Go module alongside `aer`. The included `go.work`
-wires it to the local `aer` checkout:
-
-```
-git/
-  aer/         # the aer module
-  aer-check/   # this module
-  force-md/    # aer dependency (local)
-```
-
-```sh
-cd aer-check
-go build -o aer-check .
-```
-
 ## Usage
 
 ```sh
@@ -138,7 +121,7 @@ aer-check force-app/main/default \
 | Field sets | Apex `SObjectType.X.FieldSets.Y`, VF `$ObjectType.X.FieldSets.Y` | `FieldSet` |
 | Custom metadata records | Apex `Type__mdt.getInstance('X')` | `CustomMetadata` |
 | Custom permissions | Profile/PermissionSet `customPermissions`, Apex `FeatureManagement.checkPermission('X')` | `CustomPermission` |
-| Custom labels | `Label.My_Label` | `CustomLabel` |
+| Custom labels | `Label.My_Label`, `System.Label.My_Label` | `CustomLabel` |
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
 | Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses`; Visualforce tab `page`; web link / custom button `page`; site landing/system pages | `ApexPage` |
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
@@ -186,14 +169,15 @@ object.
   "Variable does not exist", which is indistinguishable from an undefined local
   variable, so it is not classified as a missing class. Reference the type
   directly (e.g. via `new`, a variable, a parameter) to have it detected.
-- Custom labels are detected through the `Label.X` form; the three-segment
-  `System.Label.X` form is not yet detected.
 - Managed-package components are not retrievable through the Metadata API; for a
   managed dependency the fetch step reports a warning and continues.
-- Profile/PermissionSet detection covers Apex classes, Visualforce pages, flows,
-  and custom permissions; object, field, record-type, and layout references are
-  not yet checked.
-- Custom permissions are detected through Profile/PermissionSet
-  `customPermissions`; the Apex form (`FeatureManagement.checkPermission('X')`)
-  is not yet detected.
+- References built from strings at runtime — dynamic SOQL (`Database.query`),
+  `Type.forName`, `Schema.getGlobalDescribe().get('X')` — are not resolved,
+  because the referenced name is not known statically.
+- A relationship-traversal field reference (`Base.Rel__r.Field__c`) is resolved
+  only through relationships defined in the source tree; a path through a
+  standard or otherwise-unknown relationship is skipped rather than attributed
+  to a guessed object.
+- Metadata stored as JSON rather than XML — CRM Analytics assets and
+  ExperienceBundle sites — is not scanned for references.
 
