@@ -144,6 +144,7 @@ aer-check force-app/main/default \
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
 | Static resources | Visualforce page/component markup `$Resource.X`; LWC `@salesforce/resourceUrl/X`; Apex `Test.loadData(..., 'X')` | `StaticResource` |
 | Email templates | Workflow email alert `template` | `EmailTemplate` |
+| Quick actions | Flow quick action invocations | `QuickAction` |
 | Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
 | Lightning message channels | LWC `@salesforce/messageChannel/X` import | `LightningMessageChannel` |
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
