@@ -140,11 +140,12 @@ aer-check force-app/main/default \
 | Custom permissions | Profile/PermissionSet `customPermissions`, Apex `FeatureManagement.checkPermission('X')` | `CustomPermission` |
 | Custom labels | `Label.My_Label` | `CustomLabel` |
 | Flows | `Flow.Interview.My_Flow`; Profile/PermissionSet `flowAccesses` | `Flow` |
-| Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses`; Visualforce tab `page`; web link / custom button `page` | `ApexPage` |
+| Visualforce pages | `Page.My_Page`, `System.Page.My_Page`; Profile/PermissionSet `pageAccesses`; Visualforce tab `page`; web link / custom button `page`; site landing/system pages | `ApexPage` |
 | Visualforce components | `Component.My_Cmp`, `System.Component.My_Cmp`, page/component markup `<c:cmp>` | `ApexComponent` |
 | Static resources | Visualforce page/component markup `$Resource.X`; LWC `@salesforce/resourceUrl/X`; Apex `Test.loadData(..., 'X')` | `StaticResource` |
 | Email templates | Workflow email alert `template` | `EmailTemplate` |
 | Quick actions | Flow quick action invocations | `QuickAction` |
+| Workflow alerts | Flow email alert invocations | `WorkflowAlert` |
 | Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
 | Lightning message channels | LWC `@salesforce/messageChannel/X` import | `LightningMessageChannel` |
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
