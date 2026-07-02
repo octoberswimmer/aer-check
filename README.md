@@ -171,6 +171,12 @@ Lightning web component JavaScript is parsed (via the LWC discovery), and its
 `resourceUrl` → static resources, `messageChannel` → Lightning message channels,
 and `schema/Object[.Field]` → custom objects and fields.
 
+Field references that traverse relationships (`Base.Rel__r.Field__c`) are
+resolved through a relationship map built from the source tree's lookup fields,
+walking one segment at a time to the landing object. A path whose relationships
+are not defined in the source is skipped rather than attributed to the wrong
+object.
+
 ### Known limitations
 
 - A class referenced **only** through a static call (`Util.doWork()`) or a bare
