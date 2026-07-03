@@ -25,6 +25,7 @@ var (
 	apiVersion     string
 	verbose        bool
 	typeFilter     []string
+	references     bool
 )
 
 var rootCmd = &cobra.Command{
@@ -69,6 +70,7 @@ func init() {
 	flags.StringVar(&apiVersion, "api-version", "", "Metadata API version for package.xml and fetch (default: client default)")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "print parse and type-check errors encountered during analysis")
 	flags.StringArrayVarP(&typeFilter, "type", "t", nil, "only report this Metadata API type, e.g. CustomField or ApexPage (repeatable)")
+	flags.BoolVar(&references, "references", false, "list the source files that reference each missing item")
 }
 
 // validateTypeFilter warns about any requested type that is not a Metadata API
@@ -131,7 +133,11 @@ func run(cmd *cobra.Command, args []string) error {
 		if recursive {
 			fmt.Printf("=== Analysis pass %d ===\n", iteration)
 		}
-		fmt.Println(report.String())
+		if references {
+			fmt.Println(report.StringWithReferences())
+		} else {
+			fmt.Println(report.String())
+		}
 		union.add(report)
 
 		if report.IsEmpty() {

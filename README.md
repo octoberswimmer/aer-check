@@ -30,6 +30,7 @@ With no directory, the current directory is analyzed.
 | `--package <file>` | Load a managed-package `.pkg` file so the types it provides are not reported as missing (repeatable; like `aer --package`). |
 | `--package-dir <dir>` | Load every `.pkg` file in a directory (repeatable; like `aer --package-dir`). |
 | `--type, -t <type>` | Only report this Metadata API type, e.g. `CustomField` or `ApexPage` (repeatable). |
+| `--references` | List the source files that reference each missing item. |
 | `--api-version <v>` | Metadata API version for `package.xml` and fetch (default: the client default). |
 | `--verbose, -v` | Print the parse/type-check errors encountered during analysis. |
 
@@ -87,6 +88,22 @@ limited to them too):
 
 ```sh
 aer-check force-app/main/default -t CustomField -t ApexPage
+```
+
+Show which source files reference each missing item (useful for tracking down
+where a dependency comes from):
+
+```sh
+aer-check force-app/main/default -t CustomField --references
+```
+
+```
+Missing dependencies (1):
+
+  Fields (1):
+    - Account.Made_Up_Field__c
+        force-app/main/default/layouts/Account-Account Layout.layout-meta.xml
+        force-app/main/default/classes/AccountService.cls
 ```
 
 Write a manifest of the missing metadata:
