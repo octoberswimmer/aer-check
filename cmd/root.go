@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	aercmd "github.com/octoberswimmer/aer/cmd"
 	"github.com/octoberswimmer/aer/depcheck"
@@ -23,6 +24,7 @@ var (
 	packageDirs    []string
 	apiVersion     string
 	verbose        bool
+	typeFilter     []string
 )
 
 var rootCmd = &cobra.Command{
@@ -66,6 +68,25 @@ func init() {
 	flags.StringArrayVar(&packageDirs, "package-dir", nil, "directory containing .pkg files to load (repeatable)")
 	flags.StringVar(&apiVersion, "api-version", "", "Metadata API version for package.xml and fetch (default: client default)")
 	flags.BoolVarP(&verbose, "verbose", "v", false, "print parse and type-check errors encountered during analysis")
+	flags.StringArrayVarP(&typeFilter, "type", "t", nil, "only report this Metadata API type, e.g. CustomField or ApexPage (repeatable)")
+}
+
+// validateTypeFilter warns about any requested type that is not a Metadata API
+// type aer-check can report, so a typo does not silently match nothing.
+func validateTypeFilter(types []string) {
+	if len(types) == 0 {
+		return
+	}
+	known := make(map[string]string)
+	for _, name := range depcheck.MetadataTypeNames() {
+		known[strings.ToLower(name)] = name
+	}
+	for _, t := range types {
+		if _, ok := known[strings.ToLower(strings.TrimSpace(t))]; !ok {
+			fmt.Fprintf(os.Stderr, "aer-check: warning: %q is not a known metadata type; known types: %s\n",
+				t, strings.Join(depcheck.MetadataTypeNames(), ", "))
+		}
+	}
 }
 
 func run(cmd *cobra.Command, args []string) error {
@@ -76,6 +97,7 @@ func run(cmd *cobra.Command, args []string) error {
 	if recursive && fetchDir == "" {
 		return fmt.Errorf("--recursive requires --fetch-missing")
 	}
+	validateTypeFilter(typeFilter)
 	effectiveAPIVersion := apiVersion
 	if effectiveAPIVersion == "" {
 		effectiveAPIVersion = depcheck.DefaultApiVersion()
@@ -95,6 +117,7 @@ func run(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		report = report.FilterByTypes(typeFilter)
 		lastReport = report
 
 		if verbose && len(errs) > 0 {

@@ -29,6 +29,7 @@ With no directory, the current directory is analyzed.
 | `--namespace, -d <ns>` | Default namespace for the source (like `aer --default-namespace`). |
 | `--package <file>` | Load a managed-package `.pkg` file so the types it provides are not reported as missing (repeatable; like `aer --package`). |
 | `--package-dir <dir>` | Load every `.pkg` file in a directory (repeatable; like `aer --package-dir`). |
+| `--type, -t <type>` | Only report this Metadata API type, e.g. `CustomField` or `ApexPage` (repeatable). |
 | `--api-version <v>` | Metadata API version for `package.xml` and fetch (default: the client default). |
 | `--verbose, -v` | Print the parse/type-check errors encountered during analysis. |
 
@@ -79,6 +80,13 @@ Missing dependencies (3):
 
   Apex classes (1):
     - HelperUtil
+```
+
+Report only specific Metadata API types (the `package.xml` and any fetch are
+limited to them too):
+
+```sh
+aer-check force-app/main/default -t CustomField -t ApexPage
 ```
 
 Write a manifest of the missing metadata:

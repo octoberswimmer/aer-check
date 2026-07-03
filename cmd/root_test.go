@@ -67,6 +67,27 @@ func TestRunRecursiveRequiresFetch(t *testing.T) {
 	}
 }
 
+func TestTypeFilterFlagRegistered(t *testing.T) {
+	f := rootCmd.Flags().Lookup("type")
+	if f == nil {
+		t.Fatal("expected --type flag to be registered")
+	}
+	if f.Shorthand != "t" {
+		t.Errorf("expected -t shorthand, got %q", f.Shorthand)
+	}
+}
+
+func TestValidateTypeFilterKnownAndUnknown(t *testing.T) {
+	// Known types (any case) must be accepted without panicking.
+	validateTypeFilter([]string{"CustomField", "apexpage"})
+	names := strings.Join(depcheck.MetadataTypeNames(), ",")
+	for _, want := range []string{"CustomField", "ApexPage"} {
+		if !strings.Contains(names, want) {
+			t.Errorf("expected %q among known metadata types", want)
+		}
+	}
+}
+
 func TestContainsDir(t *testing.T) {
 	dirs := []string{"src", "fetched"}
 	if !containsDir(dirs, "fetched") {
