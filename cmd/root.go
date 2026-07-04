@@ -14,6 +14,10 @@ import (
 // that never resolves cannot spin forever.
 const maxRecursiveIterations = 10
 
+// version is set at build time via -ldflags (see the Makefile); it defaults to
+// "dev" for local builds.
+var version = "dev"
+
 var (
 	packageXMLPath string
 	fetchDir       string
@@ -39,6 +43,7 @@ custom labels, and flows.
 It can write a Metadata API package.xml for the missing components and, with a
 Salesforce org, fetch them so a previously org-dependent package becomes
 self-contained.`,
+	Version:       version,
 	Args:          cobra.ArbitraryArgs,
 	SilenceUsage:  true,
 	SilenceErrors: true,

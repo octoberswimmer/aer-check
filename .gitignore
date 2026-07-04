@@ -1,3 +1,6 @@
 /aer-check
+/aer-check_*
+/*.zip
+/SHA256SUMS-*
 go.work
 go.work.sum
