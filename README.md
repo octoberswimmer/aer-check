@@ -160,7 +160,7 @@ aer-check force-app/main/default \
 | Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
 | Layouts | Profile `layoutAssignments` | `Layout` |
 | Record types | Profile/PermissionSet `recordTypeVisibilities` | `RecordType` |
-| Report types | Report `reportType` (custom `__c` types) | `ReportType` |
+| Report types | Report `reportType` (user-defined `Name__c` types; auto-generated standard types on custom objects are excluded) | `ReportType` |
 | Reports | Dashboard components (`<report>Folder/Report</report>`) | `Report` |
 | Global value sets | custom picklist field `valueSetName` | `GlobalValueSet` |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
