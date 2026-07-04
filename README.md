@@ -1,15 +1,16 @@
 # aer-check
 
 `aer-check` finds the metadata and Apex that a Salesforce source tree
-**references but does not contain** — the missing pieces that make a repository
-*org-dependent*. It is built for org-dependent unlocked package repos, where the
-code compiles only against objects, fields, and classes that live in the target
-org rather than in the repo.
+**references but does not contain** — the *org dependencies* that live in the
+target org but are not captured in the repository. This is useful for any repo
+that is not a full copy of the org: a partial source tree, a scratch-org or CI
+project whose code assumes objects, fields, and classes already exist in the
+org, or an org-dependent unlocked package.
 
 It drives [`aer`](https://aertest.com/)'s parser, schema loader, and type checker — the same
 machinery as `aer test --dry-run` — but instead of running tests it reports the
 references it cannot resolve. It can then write a Metadata API `package.xml` for
-those components and, given a Salesforce org, fetch them so the package becomes
+those components and, given a Salesforce org, fetch them so the repo becomes
 self-contained.
 
 ## Usage
@@ -140,14 +141,33 @@ Fetch from a specific org:
 aer-check force-app/main/default --fetch-missing dependencies --account my-prod-org
 ```
 
-Ignore dependencies that a managed package already provides by loading its
-`.pkg` files, so only the truly missing components are reported:
+Ignore dependencies that a package already provides by loading its `.pkg`
+files, so only the truly missing components are reported:
 
 ```sh
 aer-check force-app/main/default \
   --package dlrs.pkg \
   --package-dir ./packages
 ```
+
+Build the `.pkg` files with `aer package`:
+
+- For a **third-party managed package** (whose source you do not have), create a
+  mock from the package installed in the org:
+
+  ```sh
+  aer package mock <namespace>
+  ```
+
+- For a **first-party package** whose source you do have, build the package from
+  that source:
+
+  ```sh
+  aer package create path/to/package-source
+  ```
+
+Loading these keeps the types the packages provide from being reported as
+missing org dependencies.
 
 ## What it detects
 
@@ -207,15 +227,9 @@ object.
   "Variable does not exist", which is indistinguishable from an undefined local
   variable, so it is not classified as a missing class. Reference the type
   directly (e.g. via `new`, a variable, a parameter) to have it detected.
-- Managed-package components are not retrievable through the Metadata API; for a
-  managed dependency the fetch step reports a warning and continues.
 - References built from strings at runtime — dynamic SOQL (`Database.query`),
   `Type.forName`, `Schema.getGlobalDescribe().get('X')` — are not resolved,
   because the referenced name is not known statically.
-- A relationship-traversal field reference (`Base.Rel__r.Field__c`) is resolved
-  only through relationships defined in the source tree; a path through a
-  standard or otherwise-unknown relationship is skipped rather than attributed
-  to a guessed object.
 - Metadata stored as JSON rather than XML — CRM Analytics assets and
   ExperienceBundle sites — is not scanned for references.
 
