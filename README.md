@@ -121,6 +121,19 @@ aer-check force-app/main/default \
   --recursive
 ```
 
+A component the org reports it cannot retrieve (for example a field a report
+still references after it was deleted) is not requested again on a later pass.
+Once the only components left cannot be retrieved, the recursion stops, and they
+are summarized with the source files that reference them:
+
+```
+1 component(s) could not be retrieved from the org:
+
+  Fields (1):
+    - Widget__c.Retired_Field__c
+        force-app/main/default/reports/SampleFolder/Widget_Report.report-meta.xml
+```
+
 Fetch from a specific org:
 
 ```sh

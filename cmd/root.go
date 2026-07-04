@@ -108,6 +108,12 @@ func run(cmd *cobra.Command, args []string) error {
 	allDirs := append([]string(nil), dirs...)
 	union := newDependencySet()
 	var lastReport *depcheck.Report
+	// Components that could not be retrieved, keyed so they are not requested
+	// again on a later pass and are kept for the final summary.
+	unretrievable := make(map[string]depcheck.Dependency)
+	// Components requested on the previous pass; any still missing this pass
+	// could not be retrieved.
+	requested := make(map[string]struct{})
 
 	for iteration := 1; ; iteration++ {
 		report, errs, err := depcheck.Analyze(depcheck.Options{
@@ -121,6 +127,14 @@ func run(cmd *cobra.Command, args []string) error {
 		}
 		report = report.FilterByTypes(typeFilter)
 		lastReport = report
+
+		// A component requested on the previous pass that is still missing was
+		// not retrieved (the org may not report a warning for every such case).
+		for _, d := range report.Missing {
+			if _, req := requested[d.Key()]; req {
+				unretrievable[d.Key()] = d
+			}
+		}
 
 		if verbose && len(errs) > 0 {
 			fmt.Fprintf(os.Stderr, "%d parse/type-check error(s):\n", len(errs))
@@ -147,8 +161,23 @@ func run(cmd *cobra.Command, args []string) error {
 			break
 		}
 
-		fmt.Printf("\nFetching %d missing component(s) into %s ...\n", len(report.Missing), fetchDir)
-		result, err := depcheck.FetchMissing(report, fetchDir, account, effectiveAPIVersion)
+		// Only fetch components not already known to be unretrievable.
+		fetchReport := &depcheck.Report{}
+		nextRequested := make(map[string]struct{})
+		for _, d := range report.Missing {
+			if _, failed := unretrievable[d.Key()]; failed {
+				continue
+			}
+			fetchReport.Missing = append(fetchReport.Missing, d)
+			nextRequested[d.Key()] = struct{}{}
+		}
+		if fetchReport.IsEmpty() {
+			fmt.Println("\nRemaining components cannot be retrieved from the org; stopping.")
+			break
+		}
+
+		fmt.Printf("\nFetching %d missing component(s) into %s ...\n", len(fetchReport.Missing), fetchDir)
+		result, err := depcheck.FetchMissing(fetchReport, fetchDir, account, effectiveAPIVersion)
 		if err != nil {
 			return err
 		}
@@ -156,6 +185,12 @@ func run(cmd *cobra.Command, args []string) error {
 		for _, p := range result.Problems {
 			fmt.Fprintf(os.Stderr, "  warning: %s\n", p)
 		}
+		// The org may report some unretrievable components explicitly; record
+		// those too so they are summarized even without another pass.
+		for _, d := range fetchReport.UnretrievableFrom(result.Problems) {
+			unretrievable[d.Key()] = d
+		}
+		requested = nextRequested
 
 		if !recursive {
 			break
@@ -163,14 +198,19 @@ func run(cmd *cobra.Command, args []string) error {
 		if !containsDir(allDirs, fetchDir) {
 			allDirs = append(allDirs, fetchDir)
 		}
-		if len(result.Files) == 0 {
-			fmt.Println("\nNo new components retrieved; stopping.")
-			break
-		}
 		if iteration >= maxRecursiveIterations {
 			fmt.Fprintf(os.Stderr, "\nReached maximum of %d passes; stopping. Re-run to continue.\n", maxRecursiveIterations)
 			break
 		}
+	}
+
+	if len(unretrievable) > 0 {
+		ur := &depcheck.Report{}
+		for _, d := range unretrievable {
+			ur.Missing = append(ur.Missing, d)
+		}
+		fmt.Printf("\n%d component(s) could not be retrieved from the org:\n", len(ur.Missing))
+		fmt.Println(ur.StringWithReferences())
 	}
 
 	if packageXMLPath != "" {
