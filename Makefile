@@ -12,6 +12,7 @@ DARWIN_AMD64=$(EXECUTABLE)_darwin_amd64
 DARWIN_ARM64=$(EXECUTABLE)_darwin_arm64
 ALL=$(WINDOWS) $(WINDOWS_ARM64) $(LINUX) $(LINUX_ARM64) $(DARWIN_AMD64) $(DARWIN_ARM64)
 ZIPS=$(addsuffix _$(VERSION).zip,$(basename $(ALL)))
+LICENSES=third-party-licenses.txt
 RELEASE_ASSETS=$(ZIPS) SHA256SUMS-$(VERSION)
 
 default:
@@ -43,31 +44,31 @@ $(DARWIN_ARM64):
 	env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -v -o $(DARWIN_ARM64) ${LDFLAGS}
 	rcodesign sign --for-notarization --pem-file <(pass OctoberSwimmer/codesign/combined) $@
 
-$(basename $(WINDOWS))_$(VERSION).zip: $(WINDOWS)
+$(basename $(WINDOWS))_$(VERSION).zip: $(WINDOWS) $(LICENSES)
 	@rm -f $@
-	zip $@ $<
+	zip $@ $< $(LICENSES)
 	7za rn $@ $< $(EXECUTABLE)$(suffix $<)
 
-$(basename $(WINDOWS_ARM64))_$(VERSION).zip: $(WINDOWS_ARM64)
+$(basename $(WINDOWS_ARM64))_$(VERSION).zip: $(WINDOWS_ARM64) $(LICENSES)
 	@rm -f $@
-	zip $@ $<
+	zip $@ $< $(LICENSES)
 	7za rn $@ $< $(EXECUTABLE)$(suffix $<)
 
-$(basename $(DARWIN_AMD64))_$(VERSION).zip: $(DARWIN_AMD64)
+$(basename $(DARWIN_AMD64))_$(VERSION).zip: $(DARWIN_AMD64) $(LICENSES)
 	@rm -f $@
-	zip $@ $<
+	zip $@ $< $(LICENSES)
 	7za rn $@ $< $(EXECUTABLE)
 	rcodesign notary-submit --api-key-file <(pass OctoberSwimmer/codesign/api-key) $@
 
-$(basename $(DARWIN_ARM64))_$(VERSION).zip: $(DARWIN_ARM64)
+$(basename $(DARWIN_ARM64))_$(VERSION).zip: $(DARWIN_ARM64) $(LICENSES)
 	@rm -f $@
-	zip $@ $<
+	zip $@ $< $(LICENSES)
 	7za rn $@ $< $(EXECUTABLE)
 	rcodesign notary-submit --api-key-file <(pass OctoberSwimmer/codesign/api-key) $@
 
-%_$(VERSION).zip: %
+%_$(VERSION).zip: % $(LICENSES)
 	@rm -f $@
-	zip $@ $<
+	zip $@ $< $(LICENSES)
 	7za rn $@ $< $(EXECUTABLE)
 
 dist: test $(ZIPS)
@@ -91,6 +92,9 @@ release: checksum
 	git push octoberswimmer "$(VERSION)"
 	gh release create "$(VERSION)" --title "aer-check $(VERSION)" --notes-from-tag --verify-tag $(RELEASE_ASSETS)
 
+third-party-licenses.txt: go.mod licenses.tpl
+	go tool go-licenses report ./... --ignore github.com/octoberswimmer --template licenses.tpl > $@
+
 fmt:
 	go fmt ./...
 
@@ -101,7 +105,7 @@ test:
 	go test -race ./...
 
 clean:
-	-rm -f $(EXECUTABLE) $(EXECUTABLE)_* *.zip SHA256SUMS-*
+	-rm -f $(EXECUTABLE) $(EXECUTABLE)_* *.zip SHA256SUMS-* $(LICENSES)
 
 tag:
 	@echo "Creating next tag..."
