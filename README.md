@@ -1,17 +1,17 @@
 # aer-check
 
 `aer-check` finds the metadata and Apex that a Salesforce source tree
-**references but does not contain** — the *org dependencies* that live in the
+**references but does not contain**, i.e. the *org dependencies* that live in the
 target org but are not captured in the repository. This is useful for any repo
-that is not a full copy of the org: a partial source tree, a scratch-org or CI
-project whose code assumes objects, fields, and classes already exist in the
-org, or an org-dependent unlocked package.
+that is not a full copy of the org such as an org-dependent unlocked package.
 
-It drives [`aer`](https://aertest.com/)'s parser, schema loader, and type checker — the same
-machinery as `aer test --dry-run` — but instead of running tests it reports the
-references it cannot resolve. It can then write a Metadata API `package.xml` for
-those components and, given a Salesforce org, fetch them so the repo becomes
-self-contained.
+It drives [`aer`](https://aertest.com/)'s parser, schema loader, and type
+checker. It is similar to running `aer test --dry-run`, but instead of
+outputting the code with errors, it reports the references it cannot resolve in
+a structured format.
+
+It can then write a Metadata API `package.xml` for those components and, given
+a Salesforce org, fetch them so the repo becomes self-contained.
 
 ## Usage
 
@@ -38,30 +38,6 @@ With no directory, the current directory is analyzed.
 `aer-check` exits with status `2` when unresolved dependencies remain after
 processing, so it can be used as a CI gate. It exits `0` when nothing is
 missing and `1` on error.
-
-### Configuration (.aerrc)
-
-`aer-check` reads the same `.aerrc` configuration files as `aer`, so default
-flags can be set per project or per user instead of repeating them on every
-invocation. Files are read in increasing order of precedence:
-
-1. `$XDG_CONFIG_HOME/aer/aerrc` (or `~/.config/aer/aerrc`)
-2. `~/.aerrc`
-3. `./.aerrc` (the current directory)
-
-Each line holds one flag, optionally followed by its value; blank lines,
-`#` comments, and lines not starting with `-` are ignored. Flags that
-`aer-check` does not define (for example `aer`'s `--certificate-dir`) are
-ignored, so a project's existing `.aerrc` can be shared between `aer` and
-`aer-check`. Flags from `.aerrc` are applied before the command line, so
-explicit arguments override them. Set `AER_NO_RC` to ignore all `.aerrc`
-files for a run.
-
-```
-# .aerrc — defaults for this project
---package-dir packages
---namespace acme
-```
 
 ### Examples
 
@@ -200,7 +176,7 @@ missing org dependencies.
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>`; Lightning component tab `lwcComponent` | `LightningComponentBundle` |
 | Aura components | Aura markup `<c:cmp>`, `extends`, `implements`, and controllers | `AuraDefinitionBundle` |
 
-A field whose parent **object** is also missing is omitted from the report —
+A field whose parent **object** is also missing is omitted from the report:
 retrieving the object brings its fields along. Only **custom** objects and
 fields are reported as missing: standard objects, fields, and relationships
 (e.g. `RecordType`, `Owner`) and feature- or license-gated standard objects are
