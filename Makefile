@@ -130,6 +130,11 @@ tag:
 	read -p "Create tag $$NEXT_TAG? [y/N] " -n 1 -r; \
 	echo ""; \
 	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		$(MAKE) --always-make third-party-licenses.txt; \
+		git add third-party-licenses.txt; \
+		if ! git diff --cached --quiet -- third-party-licenses.txt; then \
+			git commit -m "Update Third-party License Attributions"; \
+		fi; \
 		CHANGELOG=$$(git changelog $$PREV_TAG..); \
 		git tag -a $$NEXT_TAG -m "Version $$NEXT_TAG" -m "" -m "$$CHANGELOG"; \
 		echo "Tag $$NEXT_TAG created successfully"; \
