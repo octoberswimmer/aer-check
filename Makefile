@@ -118,8 +118,8 @@ tag:
 		MAJOR=$$(echo $$VERSION | cut -d. -f1); \
 		MINOR=$$(echo $$VERSION | cut -d. -f2); \
 		PATCH=$$(echo $$VERSION | cut -d. -f3); \
-		NEXT_MINOR=$$((MINOR + 1)); \
-		NEXT_TAG="v$$MAJOR.$$NEXT_MINOR.0"; \
+		NEXT_PATCH=$$((PATCH + 1)); \
+		NEXT_TAG="v$$MAJOR.$$MINOR.$$NEXT_PATCH"; \
 	fi; \
 	echo "Previous tag: $$PREV_TAG"; \
 	echo "Next tag: $$NEXT_TAG"; \
