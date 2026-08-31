@@ -38,7 +38,8 @@ var rootCmd = &cobra.Command{
 	Long: `aer-check parses the Apex and metadata in one or more source directories the
 same way "aer test --dry-run" does and reports the references it cannot resolve
 against the loaded schema and source: missing objects, fields, Apex classes,
-custom labels, and flows.
+custom labels, flows, and picklist values the code uses that the field's value
+set does not define as active.
 
 It can write a Metadata API package.xml for the missing components and, with a
 Salesforce org, fetch them so a previously org-dependent package becomes

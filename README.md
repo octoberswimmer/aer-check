@@ -164,7 +164,7 @@ missing org dependencies.
 | Quick actions | Flow quick action invocations | `QuickAction` |
 | Workflow alerts | Flow email alert invocations | `WorkflowAlert` |
 | Named credentials | Apex callout endpoints (`'callout:My_Cred/...'`) | `NamedCredential` |
-| Lightning message channels | LWC `@salesforce/messageChannel/X` import | `LightningMessageChannel` |
+| Lightning message channels | LWC `@salesforce/messageChannel/X__c` import, Aura `<lightning:messageChannel type="X__c">` (the `__c` API-name suffix maps to the `X` developer name) | `LightningMessageChannel` |
 | Custom tabs | CustomApplication `<tabs>`, Profile/PermissionSet tab visibilities | `CustomTab` |
 | Custom applications | Profile/PermissionSet `applicationVisibilities` | `CustomApplication` |
 | Layouts | Profile `layoutAssignments` | `Layout` |
@@ -172,6 +172,7 @@ missing org dependencies.
 | Report types | Report `reportType` (user-defined `Name__c` types; auto-generated standard types on custom objects are excluded) | `ReportType` |
 | Reports | Dashboard components (`<report>Folder/Report</report>`) | `Report` |
 | Global value sets | custom picklist field `valueSetName` | `GlobalValueSet` |
+| Picklist values | Apex `Field__c = 'X'` assignments and `new Obj__c(Field__c = 'X')` initializers, `==`/`!=` comparisons, SOQL `WHERE Field__c = 'X'` / `IN (...)` / `INCLUDES (...)` (including relationship paths), as string literals or `static final String` constants; FlexiPage component / field visibility rules (`{!Record.Field__c}` `EQUAL` / `NE` a value) | `CustomField` (or the `GlobalValueSet` / `StandardValueSet` the field uses) |
 | FlexiPages | object / app action overrides (`<type>Flexipage</type>`), tab `<flexiPage>` | `FlexiPage` |
 | Lightning components | FlexiPage `<componentName>c:myCmp</componentName>`; Lightning component tab `lwcComponent` | `LightningComponentBundle` |
 | Aura components | Aura markup `<c:cmp>`, `extends`, `implements`, and controllers | `AuraDefinitionBundle` |
@@ -195,6 +196,18 @@ resolved through a relationship map built from the source tree's lookup fields,
 walking one segment at a time to the landing object. A path whose relationships
 are not defined in the source is skipped rather than attributed to the wrong
 object.
+
+A **picklist value** is reported when Apex, or a Lightning record page's
+component visibility filter, names a value that the field's value set does not
+define as *active*: a value that is present but deactivated
+(`<isActive>false</isActive>`) is reported as `Object.Field: Value (inactive)`,
+and a value the set does not define at all is reported for restricted picklists
+(an unrestricted picklist accepts values it does not list). Multi-select values
+are checked part by part. The component to retrieve is the field itself, or the
+global or standard value set that supplies its values; a field whose global
+value set is not in the source is judged against nothing (the missing value set
+is reported instead), and standard picklists are only checked when their
+standard value set is known.
 
 ### Known limitations
 
