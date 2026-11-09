@@ -1,5 +1,11 @@
 # aer-check
 
+> **Deprecated.** `aer-check` is now the `aer check` command, included in
+> [`aer`](https://aertest.com/), so it no longer needs a separate download. It
+> takes the same arguments and flags, except that `--namespace` is
+> `--default-namespace` (`-d` is unchanged). See the "Check Command" section of
+> the aer README.
+
 `aer-check` finds the metadata and Apex that a Salesforce source tree
 **references but does not contain**, i.e. the *org dependencies* that live in the
 target org but are not captured in the repository. This is useful for any repo
